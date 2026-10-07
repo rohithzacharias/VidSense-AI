@@ -1,0 +1,17 @@
+[project]
+name = "hacknex-vidsense-ai"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "rohithzacharias", email = "rohithzacharias@karunya.edu.in" }
+]
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+hacknex-vidsense-ai = "hacknex_vidsense_ai:main"
+
+[build-system]
+requires = ["uv_build>=0.12.23,<0.13.0"]
+build-backend = "uv_build"
