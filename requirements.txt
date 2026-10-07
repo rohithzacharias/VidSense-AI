@@ -1,0 +1,40 @@
+# ==============================================================================
+# VidSense AI — Python Dependencies
+# Install with: uv pip install -r requirements.txt
+#           or: pip install -r requirements.txt
+# ==============================================================================
+
+# --- Computer Vision & Video Processing ---
+opencv-python>=4.8.0
+numpy>=1.24.0
+pillow>=10.0.0
+lapx>=0.5.0
+
+# --- Deep Learning & Object Detection ---
+torch>=2.0.0
+torchvision>=0.15.0
+ultralytics>=8.2.0
+pyyaml>=6.0.0
+
+# --- Web Framework & API Server ---
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+python-multipart>=0.0.9
+
+# --- Database & Storage ---
+pymongo>=4.6.0
+
+# --- LLM & Natural Language Reasoning ---
+groq>=0.5.0
+httpx>=0.27.0
+
+# --- Configuration & Schemas ---
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+
+# --- Local VLM (Qwen2.5-VL via GGUF) ---
+# NOTE: llama-cpp-python with CUDA acceleration requires a prebuilt wheel or build flags.
+# See README.md for instructions:
+# Option A (CUDA pre-built): uv pip install llama-cpp-python --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cu124
+# Option B (CPU-only):      uv pip install llama-cpp-python
+# llama-cpp-python>=0.3.0

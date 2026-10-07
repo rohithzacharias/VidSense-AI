@@ -1,11 +1,146 @@
-# Python-generated files
+# ==============================================================================
+# VidSense AI — Comprehensive .gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Environment & Sensitive Credentials (CRITICAL: NEVER UPLOAD)
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.pfx
+*.crt
+id_rsa*
+secrets/
+credentials.json
+client_secret*.json
+service_account*.json
+
+# ------------------------------------------------------------------------------
+# 2. Large AI / ML Model Weights & Checkpoints (Gigabytes: NEVER UPLOAD)
+# ------------------------------------------------------------------------------
+# YOLO & PyTorch weights
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+yolov8*.pt
+runs/
+
+# LLM / VLM weights (e.g., Qwen2.5-VL GGUF models)
+*.gguf
+models/
+!models/.gitkeep
+
+# ------------------------------------------------------------------------------
+# 3. Video Datasets, Uploads, and Extracted Media (NEVER UPLOAD)
+# ------------------------------------------------------------------------------
+# Video formats
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.flv
+*.wmv
+*.m4v
+
+# Image / Frame dump formats if generated in bulk
+data/frames/
+data/clips/
+data/videos/
+data/videos/uploads/
+data/videos/processed/
+data/*
+!data/**/.gitkeep
+!data/.gitkeep
+
+# ------------------------------------------------------------------------------
+# 4. Pipeline Outputs & Generated Run Artifacts
+# ------------------------------------------------------------------------------
+outputs/
+!outputs/**/.gitkeep
+!outputs/.gitkeep
+*.annotated.mp4
+
+# ------------------------------------------------------------------------------
+# 5. Python Bytecode, Caches & Environments
+# ------------------------------------------------------------------------------
 __pycache__/
-*.py[oc]
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# Build & Packaging
 build/
 dist/
 wheels/
-*.egg-info
+*.egg
+*.egg-info/
+installed-files.txt
 
-# Virtual environments
-.venv
-*.gguf
+# Package managers
+.uv/
+
+# Testing & Linting caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# ------------------------------------------------------------------------------
+# 6. Databases, Backups & Dumps
+# ------------------------------------------------------------------------------
+*.sqlite3
+*.db
+*.bson
+dump/
+
+# ------------------------------------------------------------------------------
+# 7. Logs & Temporary Files
+# ------------------------------------------------------------------------------
+*.log
+logs/
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ------------------------------------------------------------------------------
+# 8. Operating System & Editor Artifacts
+# ------------------------------------------------------------------------------
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

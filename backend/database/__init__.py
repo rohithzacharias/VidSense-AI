@@ -1,0 +1,3 @@
+"""
+VidSense AI — Database module.
+"""

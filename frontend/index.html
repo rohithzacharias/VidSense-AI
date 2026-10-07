@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VidSense AI — Video Understanding & Temporal Reasoning</title>
+  <meta name="description" content="AI-powered video temporal reasoning. Query videos with precise timestamp citations, object tracking, and evidence frames.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-icon">🎥</div>
+        <div class="brand-info">
+          <h1>VIDEO UNDERSTANDING</h1>
+          <p class="brand-subtitle">Upload a video and ask questions about what happened.</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="video-picker-wrapper">
+          <label for="videoSelect" class="select-label">Active Video:</label>
+          <select id="videoSelect" class="video-select">
+            <option value="">Loading videos...</option>
+          </select>
+        </div>
+        <button id="processVideoBtn" class="btn btn-primary process-btn">
+          <span>⚡</span> Process Video
+        </button>
+        <label for="videoFileInput" class="btn btn-secondary upload-btn">
+          <span>📁</span> Upload Video
+          <input type="file" id="videoFileInput" accept="video/*" hidden>
+        </label>
+      </div>
+    </header>
+
+    <!-- Main Content Layout -->
+    <main class="main-layout">
+      <!-- Left Column: Video Player & Timeline -->
+      <section class="player-column card glass">
+        <div class="card-header">
+          <div class="badge status-badge" id="videoStatusBadge">
+            <span class="status-dot"></span> Ready
+          </div>
+          <div class="video-meta-tag" id="currentVideoName">skating.mp4</div>
+        </div>
+
+        <!-- Video Player Wrapper -->
+        <div class="video-player-container">
+          <video id="mainVideoPlayer" preload="metadata" playsinline controls>
+            <source src="" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          
+          <!-- Live Event Overlay Tag -->
+          <div class="current-event-overlay" id="currentEventOverlay" style="display: none;">
+            <span class="pulse-indicator"></span>
+            <span class="event-overlay-text" id="eventOverlayText">Analyzing...</span>
+          </div>
+        </div>
+
+        <!-- Video Controls & Time Bar -->
+        <div class="playback-bar-wrapper">
+          <div class="time-display">
+            <span id="currentTimeDisplay" class="mono">00:00.0</span>
+            <span class="time-divider">/</span>
+            <span id="durationDisplay" class="mono">00:10.0</span>
+          </div>
+          <div class="current-event-indicator" id="currentEventChip">
+            <span class="chip-label">Current Event:</span>
+            <span class="chip-value" id="currentEventTitle">Select or play video</span>
+          </div>
+        </div>
+
+        <!-- Event Timeline Section -->
+        <div class="timeline-section">
+          <div class="timeline-header">
+            <h3>EVENT TIMELINE</h3>
+            <span class="badge count-badge" id="eventCountBadge">0 Events</span>
+          </div>
+          <p class="timeline-help">Click any event marker to seek video directly to that moment.</p>
+
+          <div class="timeline-track" id="timelineList">
+            <div class="timeline-loading">
+              <div class="spinner"></div>
+              <span>Loading events from MongoDB...</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Ask & Answer Interface -->
+      <section class="qa-column">
+        <!-- Question Input Card -->
+        <div class="card glass ask-card">
+          <div class="card-header">
+            <h3>ASK ABOUT THE VIDEO</h3>
+            <span class="badge ai-badge">Groq Llama-3 Reasoning</span>
+          </div>
+
+          <div class="prompt-box-wrapper">
+            <textarea 
+              id="questionInput" 
+              class="question-input" 
+              placeholder="e.g. What trick is Person #1 performing on the skateboard?" 
+              rows="3"
+            ></textarea>
+            
+            <div class="prompt-actions">
+              <div class="time-constraint-toggle">
+                <label class="checkbox-container">
+                  <input type="checkbox" id="useCurrentTimeCheckbox">
+                  <span class="checkmark"></span>
+                  <span class="checkbox-label">Filter near current playback time (<span id="activeFilterTime" class="mono">00:00</span>)</span>
+                </label>
+              </div>
+              <button id="askButton" class="btn btn-primary ask-btn">
+                <span class="btn-text">ASK</span>
+                <span class="btn-icon">⚡</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Suggestion Pills -->
+          <div class="suggestion-pills">
+            <span class="pills-label">Suggestions:</span>
+            <button class="pill-btn" data-query="What trick is Person #1 doing on the skateboard?">What trick is Person #1 doing?</button>
+            <button class="pill-btn" data-query="What objects and vehicles are in the scene?">What objects are visible?</button>
+            <button class="pill-btn" data-query="What happened between 00:00 and 00:05?">What happened in 00:00–00:05?</button>
+          </div>
+        </div>
+
+        <!-- Answer & Evidence Card -->
+        <div class="card glass answer-card" id="answerCard" style="display: none;">
+          <div class="card-header">
+            <h3>ANSWER</h3>
+            <div class="timestamp-pill" id="answerTimestampPill">
+              ⏱ <span id="answerTimeRange">00:00 — 00:05</span>
+            </div>
+          </div>
+
+          <div class="answer-content">
+            <div class="answer-bullet">
+              <span class="bullet-dot"></span>
+              <p id="answerText" class="answer-text">Answer will appear here...</p>
+            </div>
+
+            <!-- Key Objects Detected -->
+            <div class="key-objects-container" id="keyObjectsContainer" style="display: none;">
+              <span class="objects-label">Detected Actors:</span>
+              <div class="objects-tags" id="objectsTagsList"></div>
+            </div>
+
+            <!-- Evidence Frames Box -->
+            <div class="evidence-box">
+              <div class="evidence-box-header">
+                <h4>Evidence Frames</h4>
+                <button id="jumpToEventBtn" class="btn btn-jump">
+                  <span>▶</span> Jump to event
+                </button>
+              </div>
+
+              <div class="evidence-frames-grid" id="evidenceFramesGrid">
+                <!-- Frame thumbnails injected by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Initial Placeholder State when no question asked yet -->
+        <div class="card glass placeholder-card" id="answerPlaceholder">
+          <div class="placeholder-icon">💡</div>
+          <h4>Ask any question to reason across the timeline</h4>
+          <p>VidSense AI queries MongoDB events and uses Groq Llama-3 to deliver verified, timestamped answers with frame evidence.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
